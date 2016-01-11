@@ -1,4 +1,4 @@
-package godo
+package flops
 
 import (
 	"strconv"
