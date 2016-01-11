@@ -29,6 +29,7 @@ type Client struct {
 	UserAgent string
 
 	// Services used for communicating with the API
+	VM           VMService
 	PubKeys      PubKeysService
 	Operation    OperationService
 	Distribution DistributionService
@@ -74,6 +75,7 @@ func NewClient(httpClient *http.Client) *Client {
 	baseURL, _ := url.Parse(defaultBaseURL)
 
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
+	c.VM = &VMServiceOp{client: c}
 	c.PubKeys = &PubKeysServiceOp{client: c}
 	c.Operation = &OperationServiceOp{client: c}
 	c.Distribution = &DistributionServiceOp{client: c}
