@@ -29,6 +29,7 @@ type Client struct {
 	UserAgent string
 
 	// Services used for communicating with the API
+	PubKeys      PubKeysService
 	Operation    OperationService
 	Distribution DistributionService
 	Software     SoftwareService
@@ -73,6 +74,7 @@ func NewClient(httpClient *http.Client) *Client {
 	baseURL, _ := url.Parse(defaultBaseURL)
 
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
+	c.PubKeys = &PubKeysServiceOp{client: c}
 	c.Operation = &OperationServiceOp{client: c}
 	c.Distribution = &DistributionServiceOp{client: c}
 	c.Software = &SoftwareServiceOp{client: c}
