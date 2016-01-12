@@ -26,12 +26,12 @@ type VM struct {
 	Disk             uint          `json:"disk"`
 	CPU              uint8         `json:"cpu"`
 	Bandwidth        uint          `json:"bandwidth"`
-	TariffID         int           `json:"tarrifId"`
-	IPAddresess      []string      `json:"ipAddresses"`
+	TariffID         int           `json:"tariffId"`
+	IPAddresses      []string      `json:"ipAddresses"`
 	PrivateIPAddress string        `json:"privateIPAdresses"`
 	State            string        `json:"state"`
 	TimeAdded        Timestamp     `json:"timeAdded"`
-	CurrentSnapshot  int           `json:"currentSnapshot"`
+	CurrentSnapshot  *int          `json:"currentSnapshot"`
 	BackupPolicy     BackupPolicy  `json:"backupPolicy"`
 	Distribution     Distribution  `json:"distribution"`
 	OwnerUser        *string       `json:"ownerUser"`
@@ -39,6 +39,7 @@ type VM struct {
 	PublicKeys       []VMPublicKey `json:"publicKeys"`
 }
 
+// VMPublicKey represents a Flops VM's public key
 type VMPublicKey struct {
 	ID        int        `json:"id"`
 	Name      string     `json:"name"`
