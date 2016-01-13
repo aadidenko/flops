@@ -1,5 +1,7 @@
 package flops
 
+import "fmt"
+
 const vmBasePath = "v1/vm"
 
 // VMService is an interface for interfacing with the virtual machines
@@ -7,6 +9,18 @@ const vmBasePath = "v1/vm"
 // See: http://support.flops.ru/index.php?/Knowledgebase/Article/View/24
 type VMService interface {
 	List() ([]VM, *Response, error)
+	Get(int) (*VM, *Response, error)
+	Rename(int, string) (*int, *Response, error)
+	Start(int) (*int, *Response, error)
+	Reboot(int) (*int, *Response, error)
+	Reset(int) (*int, *Response, error)
+	PowerOff(int) (*int, *Response, error)
+	Shutdown(int) (*int, *Response, error)
+	Delete(int) (*int, *Response, error)
+	ChangeCPU(int, uint8) (*int, *Response, error)
+	ChangeTariff(int, int) (*int, *Response, error)
+	AddIP(int) (*int, *Response, error)
+	DeleteIP(int, string) (*int, *Response, error)
 }
 
 // VMServiceOp handles communication with the image related methods of the
@@ -50,14 +64,41 @@ type VMPublicKey struct {
 	OwnerUser *string    `json:"ownerUser"`
 }
 
-type vmRoot struct {
+type vmsRoot struct {
 	Status string `json:"status"`
 	VM     []VM   `json:"result"`
+}
+
+type vmRoot struct {
+	Status string `json:"status"`
+	VM     *VM    `json:"result"`
 }
 
 // List lists all the virtual machines available.
 func (s *VMServiceOp) List() ([]VM, *Response, error) {
 	return s.list()
+}
+
+// Get individual virtual machine
+func (s *VMServiceOp) Get(vmID int) (*VM, *Response, error) {
+	if vmID < 1 {
+		return nil, nil, NewArgError("vmID", "cannot be less than 1")
+	}
+
+	path := fmt.Sprintf("%s/%d", vmBasePath, vmID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(vmRoot)
+	resp, err := s.client.Do(req, root)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return root.VM, resp, err
 }
 
 // Helper method for listing virtual machines
@@ -67,7 +108,7 @@ func (s *VMServiceOp) list() ([]VM, *Response, error) {
 		return nil, nil, err
 	}
 
-	root := new(vmRoot)
+	root := new(vmsRoot)
 	resp, err := s.client.Do(req, root)
 	if err != nil {
 		return nil, resp, err

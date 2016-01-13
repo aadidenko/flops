@@ -30,9 +30,16 @@ type Operation struct {
 	ErrorCode    *string `json:"errorMessage,omitemty"`
 }
 
+type operationOpts map[string]string
+
 type operationRoot struct {
 	Status    string     `json:"status"`
 	Operation *Operation `json:"result"`
+}
+
+type operationResponse struct {
+	Status      string `json:"status"`
+	OperationID int    `json:"operationId"`
 }
 
 // Get operation.
