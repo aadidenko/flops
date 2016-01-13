@@ -32,7 +32,6 @@ type Client struct {
 	VM           VMService
 	PubKeys      PubKeysService
 	Operation    OperationService
-	Snapshots    SnapshotsService
 	Distribution DistributionService
 	Software     SoftwareService
 	Tariffs      TariffsService
@@ -79,7 +78,6 @@ func NewClient(httpClient *http.Client) *Client {
 	c.VM = &VMServiceOp{client: c}
 	c.PubKeys = &PubKeysServiceOp{client: c}
 	c.Operation = &OperationServiceOp{client: c}
-	c.Snapshots = &SnapshotsServiceOp{client: c}
 	c.Distribution = &DistributionServiceOp{client: c}
 	c.Software = &SoftwareServiceOp{client: c}
 	c.Tariffs = &TariffsServiceOp{client: c}

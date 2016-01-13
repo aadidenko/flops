@@ -21,6 +21,7 @@ type VMService interface {
 	ChangeTariff(int, int) (*int, *Response, error)
 	AddIP(int) (*int, *Response, error)
 	DeleteIP(int, string) (*int, *Response, error)
+	Snapshots(int) ([]Snapshot, *Response, error)
 }
 
 // VMServiceOp handles communication with the image related methods of the

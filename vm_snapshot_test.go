@@ -8,20 +8,20 @@ import (
 	"time"
 )
 
-func TestSnapshots_List(t *testing.T) {
+func TestVMOperation_Snapshots(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/v1/snapshots", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/vm/1/snapshots", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		fmt.Fprint(w, `{"status":"OK","result":[{"id":2206,"name":"my-snapshot",
             "description":"My first snapshot","parentSnapshotId":null,
             "timeAdded":1414156778188}]}`)
 	})
 
-	snapshots, _, err := client.Snapshots.List()
+	snapshots, _, err := client.VM.Snapshots(1)
 	if err != nil {
-		t.Errorf("Snapshots.List returned error: %v", err)
+		t.Errorf("VM.Snapshots returned error: %v", err)
 	}
 
 	expected := []Snapshot{
@@ -35,7 +35,7 @@ func TestSnapshots_List(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(snapshots, expected) {
-		t.Errorf("Snapshots.List returned\n %+v,\n expected\n %+v",
+		t.Errorf("VM.Snapshots returned\n %+v,\n expected\n %+v",
 			snapshots, expected)
 	}
 }
