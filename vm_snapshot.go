@@ -11,12 +11,14 @@ type Snapshot struct {
 	TimeAdded        Timestamp
 }
 
+type SnapshotRequest struct{}
+
 type snapshotsRoot struct {
 	Status    string     `json:"status"`
 	Snapshots []Snapshot `json:"result"`
 }
 
-// List lists all the snapshots available.
+// Snapshots lists all the snapshots available.
 func (s *VMServiceOp) Snapshots(vmID int) ([]Snapshot, *Response, error) {
 	return s.snapshotList(vmID)
 }
@@ -37,3 +39,7 @@ func (s *VMServiceOp) snapshotList(vmID int) ([]Snapshot, *Response, error) {
 
 	return root.Snapshots, resp, err
 }
+
+// func (s *VMServiceOp) CreateSnapshot(vmID int, snapshot SnapshotRequest) (*int, *Response, error) {
+//
+// }

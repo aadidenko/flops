@@ -22,6 +22,8 @@ type VMService interface {
 	AddIP(int) (*int, *Response, error)
 	DeleteIP(int, string) (*int, *Response, error)
 	Snapshots(int) ([]Snapshot, *Response, error)
+	// CreateSnapshot(int, *SnapshotRequest) (*int, *Response, error)
+	Backups(int) ([]Backup, *Response, error)
 }
 
 // VMServiceOp handles communication with the image related methods of the
@@ -34,24 +36,24 @@ var _ VMService = &VMServiceOp{}
 
 // VM represents a Flops virtual machine
 type VM struct {
-	ID               int           `json:"id"`
-	Name             string        `json:"name"`
-	InternalID       string        `json:"internalId"`
-	Memory           uint          `json:"memory"`
-	Disk             uint          `json:"disk"`
-	CPU              uint8         `json:"cpu"`
-	Bandwidth        uint          `json:"bandwidth"`
-	TariffID         int           `json:"tariffId"`
-	IPAddresses      []string      `json:"ipAddresses"`
-	PrivateIPAddress string        `json:"privateIPAdresses"`
-	State            string        `json:"state"`
-	TimeAdded        Timestamp     `json:"timeAdded"`
-	CurrentSnapshot  *int          `json:"currentSnapshot"`
-	BackupPolicy     BackupPolicy  `json:"backupPolicy"`
-	Distribution     Distribution  `json:"distribution"`
-	OwnerUser        *string       `json:"ownerUser"`
-	AccessUsers      []string      `json:"accessUsers"`
-	PublicKeys       []VMPublicKey `json:"publicKeys"`
+	ID               int            `json:"id"`
+	Name             string         `json:"name"`
+	InternalID       string         `json:"internalId"`
+	Memory           uint           `json:"memory"`
+	Disk             uint           `json:"disk"`
+	CPU              uint8          `json:"cpu"`
+	Bandwidth        uint           `json:"bandwidth"`
+	TariffID         int            `json:"tariffId"`
+	IPAddresses      []string       `json:"ipAddresses"`
+	PrivateIPAddress string         `json:"privateIPAdresses"`
+	State            string         `json:"state"`
+	TimeAdded        Timestamp      `json:"timeAdded"`
+	CurrentSnapshot  *int           `json:"currentSnapshot"`
+	BackupPolicy     VMBackupPolicy `json:"backupPolicy"`
+	Distribution     Distribution   `json:"distribution"`
+	OwnerUser        *string        `json:"ownerUser"`
+	AccessUsers      []string       `json:"accessUsers"`
+	PublicKeys       []VMPublicKey  `json:"publicKeys"`
 }
 
 // VMPublicKey represents a Flops VM's public key
@@ -63,6 +65,11 @@ type VMPublicKey struct {
 	TimeAdded *Timestamp `json:"timeAdded"`
 	Installed bool       `json:"installed"`
 	OwnerUser *string    `json:"ownerUser"`
+}
+
+type VMBackupPolicy struct {
+	Quantity  uint `json:"quantity"`
+	Frequency uint `json:"frequency"`
 }
 
 type vmsRoot struct {
