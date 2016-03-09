@@ -11,6 +11,9 @@ type VMService interface {
 	List() ([]VM, *Response, error)
 	Get(int) (*VM, *Response, error)
 	Rename(int, string) (*int, *Response, error)
+	// Install() (*int, *Response, error)
+	// Clone() (*int, *Response, error)
+	// Reinstall() (*int, *Response, error)
 	Start(int) (*int, *Response, error)
 	Reboot(int) (*int, *Response, error)
 	Reset(int) (*int, *Response, error)
@@ -19,11 +22,21 @@ type VMService interface {
 	Delete(int) (*int, *Response, error)
 	ChangeCPU(int, uint8) (*int, *Response, error)
 	ChangeTariff(int, int) (*int, *Response, error)
+	// ChangeBackupPolicy(int, *BackupPolicyRequest) (*int, *Response, error)
+	ChangePassword(int, string, bool) (*int, *Response, error)
+	// ChangePubKey() (*int, *Response, error)
+	ChangeMemory(int, uint, bool) (*int, *Response, error)
+	ChangeDisk(int, uint, bool) (*int, *Response, error)
 	AddIP(int) (*int, *Response, error)
+	// MoveIP(int, int, string) (*int, *Response, error)
 	DeleteIP(int, string) (*int, *Response, error)
 	Snapshots(int) ([]Snapshot, *Response, error)
 	// CreateSnapshot(int, *SnapshotRequest) (*int, *Response, error)
+	// RollbackSnapshot(int, int) (int, *Response, error)
+	// DeleteSnapshot(int, int) (int, *Response, error) +deleteChildren param
 	Backups(int) ([]Backup, *Response, error)
+	// RollbackBackup(int, int) (*int, *Response, error) +createBackup param
+	// DownloadBackup(int, int) (BackupDownload, *Response, error)
 }
 
 // VMServiceOp handles communication with the image related methods of the

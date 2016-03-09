@@ -7,6 +7,9 @@ const pubKeysBasePath = "v1/pubkeys"
 // See: http://support.flops.ru/index.php?/Knowledgebase/Article/View/24
 type PubKeysService interface {
 	List() ([]PubKey, *Response, error)
+	// Add()
+	// Edit()
+	// Delete()
 }
 
 // PubKeysServiceOp handles communication with the image related methods of the
