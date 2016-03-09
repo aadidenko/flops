@@ -222,6 +222,110 @@ func TestVMOperation_ChangeTariff(t *testing.T) {
 	}
 }
 
+func TestVMOperation_ChangePassword(t *testing.T) {
+	setup()
+	defer teardown()
+
+	password := "newPassword"
+	isSendPasswordTrue := "true"
+
+	mux.HandleFunc("/v1/vm/1/password_change", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "GET")
+
+		newPassword := r.URL.Query().Get("password")
+		if password != newPassword {
+			t.Errorf("Request param `password` = %+v, expected %+v", newPassword, password)
+		}
+
+		isSendPassword := r.URL.Query().Get("sendPassword")
+		if isSendPasswordTrue != isSendPassword {
+			t.Errorf("Request param `sendPassword` = %+v, expected %+v", isSendPasswordTrue, isSendPassword)
+		}
+
+		fmt.Fprintf(w, `{"status":"OK","operationId":1}`)
+	})
+
+	operationID, _, err := client.VM.ChangePassword(1, password, true)
+	if err != nil {
+		t.Errorf("VM.ChangePassword returned error: %v", err)
+	}
+
+	expected := 1
+	if !reflect.DeepEqual(*operationID, expected) {
+		t.Errorf("VM.ChangePassword returned %+v, expected %+v", operationID, expected)
+	}
+}
+
+func TestVMOperation_ChangeMemory(t *testing.T) {
+	setup()
+	defer teardown()
+
+	memory := uint(512)
+	memoryStr := "512"
+	isAllowRestartTrue := "true"
+
+	mux.HandleFunc("/v1/vm/1/memory_change", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "GET")
+
+		newMemorySize := r.URL.Query().Get("memory")
+		if memoryStr != newMemorySize {
+			t.Errorf("Request param `memory` = %+v, expected %+v", newMemorySize, memory)
+		}
+
+		isAllowRestart := r.URL.Query().Get("allowRestart")
+		if isAllowRestartTrue != isAllowRestart {
+			t.Errorf("Request param `allowRestart` = %+v, expected %+v", isAllowRestartTrue, isAllowRestart)
+		}
+
+		fmt.Fprintf(w, `{"status":"OK","operationId":1}`)
+	})
+
+	operationID, _, err := client.VM.ChangeMemory(1, memory, true)
+	if err != nil {
+		t.Errorf("VM.ChangeMemory returned error: %v", err)
+	}
+
+	expected := 1
+	if !reflect.DeepEqual(*operationID, expected) {
+		t.Errorf("VM.ChangeMemory returned %+v, expected %+v", operationID, expected)
+	}
+}
+
+func TestVMOperation_ChangeDisk(t *testing.T) {
+	setup()
+	defer teardown()
+
+	disk := uint(8192)
+	diskStr := "8192"
+	isAllowMemoryChangeTrue := "true"
+
+	mux.HandleFunc("/v1/vm/1/disk_change", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "GET")
+
+		newDiskSize := r.URL.Query().Get("disk")
+		if diskStr != newDiskSize {
+			t.Errorf("Request param `disk` = %+v, expected %+v", newDiskSize, disk)
+		}
+
+		isAllowMemoryChange := r.URL.Query().Get("allowMemoryChange")
+		if isAllowMemoryChangeTrue != isAllowMemoryChange {
+			t.Errorf("Request param `allowMemoryChange` = %+v, expected %+v", isAllowMemoryChangeTrue, isAllowMemoryChange)
+		}
+
+		fmt.Fprintf(w, `{"status":"OK","operationId":1}`)
+	})
+
+	operationID, _, err := client.VM.ChangeDisk(1, disk, true)
+	if err != nil {
+		t.Errorf("VM.ChangeMemory returned error: %v", err)
+	}
+
+	expected := 1
+	if !reflect.DeepEqual(*operationID, expected) {
+		t.Errorf("VM.ChangeMemory returned %+v, expected %+v", operationID, expected)
+	}
+}
+
 func TestVMOperation_AddIP(t *testing.T) {
 	setup()
 	defer teardown()

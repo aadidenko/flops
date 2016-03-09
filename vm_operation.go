@@ -51,10 +51,42 @@ func (s *VMServiceOp) ChangeCPU(vmID int, count uint8) (*int, *Response, error) 
 	return s.doOperation(vmID, operation, opts)
 }
 
-// ChangeTariff changes tariff for the virtual machine
+// ChangeTariff changes tariff for a virtual machine
 func (s *VMServiceOp) ChangeTariff(vmID int, tariffID int) (*int, *Response, error) {
 	operation := "tariff_change"
 	opts := &operationOpts{"tariffId": strconv.Itoa(tariffID)}
+	return s.doOperation(vmID, operation, opts)
+}
+
+// ChangePassword changes the password for a virtual machine
+func (s *VMServiceOp) ChangePassword(vmID int, password string, isSendPassword bool) (*int, *Response, error) {
+	operation := "password_change"
+	opts := &operationOpts{
+		"password":     password,
+		"sendPassword": strconv.FormatBool(isSendPassword),
+	}
+	return s.doOperation(vmID, operation, opts)
+}
+
+// ChangeMemory changes the memory size for a virtual machine
+// Size in Megabytes, min - 512, max - 16384.
+func (s *VMServiceOp) ChangeMemory(vmID int, size uint, isAllowRestart bool) (*int, *Response, error) {
+	operation := "memory_change"
+	opts := &operationOpts{
+		"memory":       strconv.Itoa(int(size)),
+		"allowRestart": strconv.FormatBool(isAllowRestart),
+	}
+	return s.doOperation(vmID, operation, opts)
+}
+
+// ChangeDisk changes the disk size for a virtual machine
+// Size in Megabytes, min - 8192, max - 524288.
+func (s *VMServiceOp) ChangeDisk(vmID int, size uint, isAllowMemoryChange bool) (*int, *Response, error) {
+	operation := "disk_change"
+	opts := &operationOpts{
+		"disk":              strconv.Itoa(int(size)),
+		"allowMemoryChange": strconv.FormatBool(isAllowMemoryChange),
+	}
 	return s.doOperation(vmID, operation, opts)
 }
 
